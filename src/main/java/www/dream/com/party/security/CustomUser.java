@@ -21,7 +21,7 @@ public class CustomUser extends User {
 	}
 
 	public CustomUser(PartyVO user) {
-		//Lamda expression map : 목록에서 빨대 꼽아서 나오는 각 객체에 지정된 함수를 적용하여 나오는 결과를 다시 스트림으로 만들어 줍니다.
+		//Lamda expression map : 목록에서 나오는 각 객체에 지정된 함수를 적용하여 나오는 결과를 다시 스트림으로 만들어 줍니다.
 		super(user.getLoginId(), user.getPassword(), 
 				user.getListAuthority().stream().map(
 				auth -> new SimpleGrantedAuthority(auth.getAuthority()))
