@@ -13,7 +13,7 @@ import org.springframework.security.web.authentication.AuthenticationSuccessHand
 
 public class CustomLoginSuccessHandler implements AuthenticationSuccessHandler {
 
-	//인증 성공. 민증까라. id, pwd가 맞아 떨어짐. 권한 관리는 아님
+	//인증 성공. id, pwd가 맞아 떨어짐. 권한 관리는 아님
 	@Override
 	public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response,
 			Authentication authentication) throws IOException, ServletException {
