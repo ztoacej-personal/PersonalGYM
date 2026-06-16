@@ -31,7 +31,6 @@ public class PostController {
 	
 	//HttpSession session를 추가한 이유는 csrf 처리가 session 완료 이후 생성되는 경우가 있고
 	//이에 ERR_INCOMPLETE_CHUNKED_ENCODING 에러가 발생합니다. 이를 session 추가하였더니 사라졌습니다.
-	//이유는 내가 스프링 개발자 정도라면 알겠져
 	@GetMapping("listPost")
 	public void listPost(@RequestParam("boardId") long boardId, Criteria criteria, Model model, HttpSession session) {
 		final long countTotal = postService.countTotalPostWithPaging(boardId, criteria);
