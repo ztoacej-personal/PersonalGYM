@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="www.dream.com.party.model.mapper.PartyMapper">
+
+	<resultMap id="partyResultMap"
+		type="www.dream.com.party.model.PartyVO"
+		extends="www.dream.com.framework.model.mapper.FrameworkMapper.commonMngInfoResultMap">
+		<constructor>
+			<idArg column="id" javaType="_long" />
+		</constructor>
+		<result property="name" column="name" />
+		<result property="birthDate" column="birth_date" />
+		<result property="loginId" column="login_id" />
+		<result property="password" column="password" />
+		<result property="nickname" column="nickname" />
+		<collection property="listAuthority"
+			ofType="www.dream.com.party.model.AuthorityVO" columnPrefix="auth_">
+			<result property="authority" column="name" />
+		</collection>
+	</resultMap>
+
+	<!-- 모든 사람은 모든 연락처 정보와 함께 다 나와봐 -->
+	<select id="selectAllPartyWithContactPoint"
+		resultMap="partyResultMap">
+	<![CDATA[
+		select p.*
+		  from T_Party p
+	]]>
+	</select>
+
+	<!--  public PartyVO findPersonByLoginId(@Param("loginId") String loginId); -->
+	<select id="findPersonByLoginId" resultMap="partyResultMap">
+	<![CDATA[
+		select m.*, t.name auth_name
+		  from (select p.*, a.auth_name auth
+ 	      	      from T_Party p
+                       left outer join T_Authority a on p.id = a.party_id
+	             where p.login_id = #{loginId}) m,
+	           T_Authority_Type t
+	     START WITH t.name = m.auth
+	   CONNECT BY PRIOR t.name = t.super_auth_name
+	]]>
+	</select>
+	
+	<!-- #{birth_date, jdbcType=VARCHAR} -->
+	<insert id="registerParty">
+		<selectKey keyProperty="id" order="BEFORE" resultType="long">
+			select seq4Party_id.nextval from dual
+		</selectKey>
+		insert into T_Party(id, name, birth_date, login_id, password, nickname)
+		       values(#{id}, #{name}, #{birthDate}, #{loginId}, #{password, jdbcType=VARCHAR},#{nickname, jdbcType=VARCHAR})
+	</insert>
+	
+	<insert id="registerAuthority">
+			insert into T_Authority (party_id, auth_name)
+				values ((SELECT MAX(id) AS p_id FROM T_Party p), 'ROLE_MEMBER')
+	</insert>
+
+	<!--  public boolean chkIdDup(String newId); -->
+	<select id="chkIdDup" resultType="boolean">
+		SELECT CASE WHEN COUNT(*) = 0 THEN 0
+       		   ELSE 1 END
+		  FROM T_Party
+		 WHERE login_id = #{newId}
+	</select>
+	
+	<!--  public boolean chkNickDup(String newNick); -->
+	<select id="chkNickDup" resultType="boolean">
+		SELECT CASE WHEN COUNT(*) = 0 THEN 0
+       		   ELSE 1 END
+		  FROM T_Party
+		 WHERE nickname = #{newNick}
+	</select>
+
+	<!-- public boolean changePwd(PersonVO person); -->
+	<update id="changePwd">
+	<![CDATA[
+		update T_Party
+		   set password = #{password}
+		 where id = #{id}
+	]]>
+	</update>
+
+</mapper>

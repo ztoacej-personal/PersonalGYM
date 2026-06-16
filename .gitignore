@@ -1,0 +1,22 @@
+# Maven
+target/
+
+# Eclipse
+.metadata/
+.settings/
+.project
+.classpath
+.factorypath
+
+# Spring Tool Suite
+.springBeans
+
+# Tomcat
+Servers/
+
+# Logs
+*.log
+
+# OS
+.DS_Store
+Thumbs.db
