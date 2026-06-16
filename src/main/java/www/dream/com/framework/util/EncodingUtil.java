@@ -7,7 +7,6 @@ import java.net.URLEncoder;
 /**
  * Utility class for JavaScript compatible UTF-8 encoding and decoding.
  * 
- * @author 배준수
  */
 public class EncodingUtil {
 	/**
